@@ -45,10 +45,6 @@
 ! 1) Set-up section      
 !------------------------------------------------------
 !      
-! start timing       
-      call SYSTEM_CLOCK(countG0,count_rate,count_max)
-      call time(tcountG0)
-!      
 ! reading run input
       call input(itfin,icheck,itstart,ivtim,isignal,itsave)
 !      

@@ -203,7 +203,7 @@
 ! bgk.log
       if (myrank==0) then
           file_name8 = 'bgk.time.log'
-          open(99,file=file_name7,status='unknown')    ! bgk.time.log
+          open(99,file=file_name8,status='unknown')    ! bgk.time.log
       endif
 !
 ! write some info on task.*.log files...

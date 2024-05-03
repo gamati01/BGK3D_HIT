@@ -33,6 +33,11 @@
       integer:: itfin,ivtim,isignal,itsave,icheck
       integer:: irestart,itstart
 !
+! start timing
+      call SYSTEM_CLOCK(countG0,count_rate,count_max)
+      call time(tcountG0)
+      call system("date       > time.log")
+!
       namelist /parameters/ svisc, u0, itfin, ivtim, isignal, &
      &                      itsave, icheck, irestart,         &
      &                      lx, ly, lz,                       &

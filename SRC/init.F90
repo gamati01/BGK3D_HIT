@@ -137,12 +137,16 @@
         end do
 !        
 ! check        
-        if(myrank==0) then
-           do i = 0, l+1
-              write(66,*) i, a01(i,m/2,n/2)
-           end do
-        endif
+!        if(myrank==0) then
+!           do i = 0, l+1
+!              write(66,*) i, a01(i,m/2,n/2)
+!           end do
+!        endif
 !                 
+        if(myrank == 0) then
+           call system("date       >> time.log")
+        endif
+!        
         call mpi_barrier(lbecomm,ierr)
 ! 
 #ifdef DEBUG_1

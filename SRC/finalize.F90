@@ -37,12 +37,10 @@
        knorm = 4.0/(1024.0*1024.0)
 #endif
 !
-      if(myrank==1) then
-           write(6,*) "VALIDATION (x): ", field1(l/2,m/2,n/2)
-           write(6,*) "VALIDATION (y): ", field2(l/2,m/2,n/2)
-           write(6,*) "VALIDATION (z): ", field3(l/2,m/2,n/2)
-      endif
-!      
+       if(myrank == 0) then
+          call system("date       >> time.log")
+       endif
+!
       write(38,*)  "# Time for section "
       write(38,1100) time_init, time_init1
       write(38,1101) time_loop, time_loop1
@@ -78,6 +76,7 @@
           write(6,*) "INFO: That's all Folks!!!!!! "
           write(6,9999)
       endif      
+!      
       call MPI_finalize(ierr)
 !
 ! formats

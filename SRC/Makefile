@@ -55,17 +55,8 @@ endif
 # version section
 #----------------------------------------------
 #
-VER = step0
-#
-ifdef STEP1
- FIX=-DSTEP1
- VER=step1
-endif
-#
-ifdef STEP2
- FIX=-DSTEP2
- VER=step2
-endif
+#v default
+VER = step3
 #
 ifdef STEP3
  FIX=-DSTEP3
