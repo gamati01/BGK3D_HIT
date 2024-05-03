@@ -1,0 +1,15 @@
+&parameters
+lx = 180
+ly = 180
+lz = 180
+proc_x = 1
+proc_y = 1
+proc_z = 1
+u0     = 0.1
+svisc  = 0.0014317
+itfin  = 30000  
+itsave = 2812  
+isignal= 85  
+ivtim  = 2812  
+icheck = 85 /
+
