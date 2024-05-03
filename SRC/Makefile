@@ -167,6 +167,7 @@ OBJ  = storage.o \
        prof_i.o \
        prof_j.o \
        prof_k.o \
+       profile.o \
        git_info.o \
        outdat.o \
        vtk_xy.binary.o \

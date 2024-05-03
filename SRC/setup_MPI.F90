@@ -7,7 +7,7 @@
 !     NAME
 !       setup_mpi
 !     DESCRIPTION
-!       Simple wrapper for mpi setup
+!       Simple wrapper for setup (not only mpi stuff)
 !     INPUTS
 !       none
 !     OUTPUT
@@ -43,6 +43,7 @@
       character*15 file_name5
       character*15 file_name6
       character*15 file_name7
+      character*15 file_name8
 !
       real(mykind):: knorm
 !
@@ -159,6 +160,8 @@
       endif
 #endif
 !
+! File declarations...
+!
 ! prof_i
       file_name1 = 'prof_i.xxxxxx.dat'
       write(file_name1(8:13),3100) myrank
@@ -174,32 +177,30 @@
       write(file_name3(8:13),3100) myrank
       open(63,file=file_name3, status='unknown')
 !      
-! vtk2d
-!      file_name4 = 'tec_xy.xxxxxx.vtk'
-!      write(file_name3(8:13),3100) myrank
-!      open(70,file=file_name4, status='unknown')
-!
 ! task.log
-      file_name5 = 'task.xxxxxx.log'
-      write(file_name5(6:11),3100) myrank
-      open(38,file=file_name5, status='unknown')       ! task.XXXXXX.log
+      file_name4 = 'task.xxxxxx.log'
+      write(file_name4(6:11),3100) myrank
+      open(38,file=file_name4, status='unknown')       ! task.XXXXXX.log
+!
+! dissipation      
+      if (myrank==0) then
+         file_name5 = 'dissipation.dat'
+         open(71,file=file_name5, status='unknown')    !  dissipation.dat
+      endif
 !
 ! diagno
       if (myrank==0) then
           file_name6 = 'diagno.dat'
-          open(60,file=file_name6,status='unknown')       ! diagno.dat
+          open(70,file=file_name6,status='unknown')    ! diagno.dat
       endif
 !
 ! bgk.log
       if (myrank==0) then
           file_name7 = 'bgk.log'
-          open(16,file=file_name7,status='unknown')       ! diagno.dat
+          open(16,file=file_name7,status='unknown')    ! bgk.log
       endif
 !
 ! write some info on task.*.log files...
-!      write(38,*) lx, ly, lz
-!      write(38,*) l, m, n
-!      write(38,*) proc_x, proc_y, proc_z
       write(38,*) offset(1)  , offset(2)  , offset(3)
       write(38,*) offset(1)  , offset(2)  , offset(3)+n
       write(38,*) " "
@@ -214,6 +215,7 @@
       write(38,*) " "
       write(38,*) offset(1)  , offset(2)  , offset(3)
       write(38,*) offset(1)  , offset(2)  , offset(3)+n
+!      
 ! formats...
 3100      format(i6.6)
 

@@ -134,8 +134,8 @@
           write(16,1003) xtot,ytot,ztot,stot
           flush(16)
 !       
-          write(60,1004) itime, xtot, ytot, ztot, rtot, stot
-          flush(60)
+          write(70,1004) itime, xtot, ytot, ztot, rtot, stot
+          flush(70)
        endif
 !
 #ifdef DEBUG_1

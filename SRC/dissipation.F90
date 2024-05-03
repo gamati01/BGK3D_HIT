@@ -156,9 +156,9 @@
        enddo
 !
 !# time, dissipation, turbulent kinetic energy
-       dissip    = (2.0*svisc*diss)/float(l)/float(m)/float(n)     ! dissipation
+       dissip    = (2.0*svisc*diss)/float(l-2)/float(m-2)/float(n-2)     ! dissipation
        loctot(1) = dissip                                          ! dissipation
-       loctot(2) = tke/float(l)/float(m)/float(n)                  ! turbulent kinetic energy
+       loctot(2) = tke/float(l-2)/float(m-2)/float(n-2)                  ! turbulent kinetic energy
        loctot(3) = ((svisc**3)/dissip)**(0.25)                     ! kolmogorov microscale
        loctot(4) = sqrt(15.0*rms/diss)                             ! Taylor microscale
 !
@@ -170,13 +170,13 @@
           kolmog = glotot(3)/float(nprocs)
           lambda = glotot(4)/float(nprocs)
 !
-          write(77,1004) itime,                                     &
+          write(71,1004) itime,                                     &
                          dissip,                                    &
                          turbke,                                    &
                          kolmog,                                    &
                          ((svisc**2)/(0.5*diss))**(0.25),           &
                          lambda
-          flush(77)
+          flush(71)
        endif
 !
 #ifdef DEBUG_1

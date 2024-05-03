@@ -6,7 +6,7 @@
 !     NAME
 !       bgk2d
 !     DESCRIPTION
-!       driver for different mpi communication pattern
+!       
 !     INPUTS
 !       none
 !     OUTPUT
@@ -15,15 +15,9 @@
 !
 !     NOTES
 !
-!       integer variables used: itfin, itstart, ivtim
-!                               itime, itsave, icheck, itrestart
-!                               isignal
-!       real variables used: tempo1, tempo2     
+!       integer variables used: 
+!       real variables used: 
 !       open the following unit: 
-!                                6? (prof_k.dat)
-!                                6? (prof_j.dat)
-!                                6? (prof_i.dat)
-!                                6? (task.<taskid>.log)
 !                              
 !     *****
 ! =====================================================================
@@ -42,7 +36,6 @@
       INTEGER:: opt
 !
       write(6,*) "GA: itstart hardwritten "
-      write(6,*) "GA: init_old to remove  "
       write(6,*) "GA: vtk2d check at the end.. "
       write(6,*) "GA: to fix mixed precision "
       itstart = 1 
@@ -72,9 +65,6 @@
 ! initialize the fields...
       call init
 !      
-! to remove      
-      call init_old
-!
 ! stop timing
       call SYSTEM_CLOCK(countG1, count_rate, count_max)
       call time(tcountG1)
@@ -164,7 +154,8 @@
 ! get timing/profiling values
          if (mod(itime,isignal).eq.0) then
             if (myrank == 0 ) then
-               write(6,*) "Iteration =", itime, "/", itfin
+!               write(6,*) "Iteration =", itime, "/", itfin
+                call profile(itime,itfin,isignal)
             endif
          endif
       enddo
