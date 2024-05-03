@@ -38,8 +38,13 @@
       write(6,*) "GA: itstart hardwritten "
       write(6,*) "GA: vtk2d check at the end.. "
       write(6,*) "GA: to fix mixed precision "
+!      
       itstart = 1 
 !
+!------------------------------------------------------
+! 1) Set-up section      
+!------------------------------------------------------
+!      
 ! start timing       
       call SYSTEM_CLOCK(countG0,count_rate,count_max)
       call time(tcountG0)
@@ -65,7 +70,7 @@
 ! initialize the fields...
       call init
 !      
-! stop timing
+! stop timing (for set-up section)
       call SYSTEM_CLOCK(countG1, count_rate, count_max)
       call time(tcountG1)
       time_init  = real(countG1-countG0)/(count_rate)
@@ -91,76 +96,39 @@
       call vtk_xz_bin(0,m/2)
       call vtk_yz_bin(0,l/2)
 !      
+!------------------------------------------------------
+! 2) Time loop section      
+!------------------------------------------------------
+!      
 ! main loop starts here.....
       do itime=itstart,itfin
 
 !
-! 1) compute boundaries      
-         call boundaries         ! MPI calls
+! 2.1) compute boundaries      
+         call boundaries         ! MPI calls here
 
-! 2) Collision (fused) step
-         call col_MC(itime)  
+! 2.2) Collision (fused) step
+         call col_MC(itime)      ! Completely local...
 
-#ifdef STEP10         
+!#ifdef STEP10         
 ! do something on GPU 
-         call do_somethingGPU_masked(uno)
-#elif STEP9         
-! do something on GPU 
-         call do_somethingGPU_overlap
-#elif STEP8         
-! do something on GPU 
-         call do_somethingGPU_overlap
-#else
-! do something on GPU 
-         call do_somethingGPU   
-#endif         
+!         call do_somethingGPU_masked(uno)
+!!#elif STEP9         
+!! do something on GPU 
+!         call do_somethingGPU_overlap
+!#elif STEP8         
+!! do something on GPU 
+!         call do_somethingGPU_overlap
+!#else
 !
-! 3: diagnostic         
-         if(mod(itime,icheck)==0) then
-!                 
-! start timing       
-            call SYSTEM_CLOCK(countD0, count_rate, count_max)
-            call time(tcountD0)
-!      
-            if(myrank==0) then
-!                  write(6,*) "VALIDATION (x): ", field1(l/2,m/2,n/2)
-!                  write(6,*) "VALIDATION (y): ", field2(l/2,m/2,n/2)
-!                  write(6,*) "VALIDATION (z): ", field3(l/2,m/2,n/2)
-            endif
-            call prof_i(itime,m/2,n/2)
-            call prof_j(itime,l/2,n/2)
-            call prof_k(itime,l/2,m/2)
-!           
-            call diagno(itime)
-!
-            call dissipation(itime)
-            call probe_global(itime,lz/2,ly/2,lz/2,88) 
-            call mpi_barrier(MPI_COMM_WORLD,ierr)
-! 
-! stop timing      
-            call SYSTEM_CLOCK(countD1, count_rate, count_max)
-            call time(tcountD1)
-            time_dg  = time_dg  + real(countD1-countD0)/(count_rate)
-            time_dg1 = time_dg1 + tcountD1-tcountD0
-         endif
-!
-         if(mod(itime,ivtim)==0) then
-            call vtk_xy_bin(itime,n/2)
-            call vtk_xz_bin(itime,m/2)
-            call vtk_yz_bin(itime,l/2)
-            call vtk_3d_bin(itime)
-         endif
-!         
-! get timing/profiling values
-         if (mod(itime,isignal).eq.0) then
-            if (myrank == 0 ) then
-!               write(6,*) "Iteration =", itime, "/", itfin
-                call profile(itime,itfin,isignal)
-            endif
-         endif
+! 2.3) diagnostic         
+         call diagnostic(itime,icheck,ivtim,itsave,isignal,itfin)
       enddo
 !$acc end data
 !
+!------------------------------------------------------
+! 3) Close everything
+!------------------------------------------------------
 !
 ! stop timing      
       call SYSTEM_CLOCK(countE1, count_rate, count_max)

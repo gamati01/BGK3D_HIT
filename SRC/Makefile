@@ -148,6 +148,7 @@ OBJ  = storage.o \
        col_MC.o \
        finalize.o \
        diagno.o \
+       diagnostic.o \
        dissipation.o \
        do_somethingGPU.o \
        hencol.o \
