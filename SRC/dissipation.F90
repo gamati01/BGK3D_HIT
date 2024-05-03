@@ -75,9 +75,9 @@
 !$omp target update from(a01,a02,a03,a04,a05,a06,a07,a08,a09,a10, &
 !$omp&                   a11,a12,a13,a14,a15,a16,a17,a18,a19)
 #endif
-       do k=0,n+1
-         do j=0,m+1
-            do i=0,l+1
+       do k=1,n
+         do j=1,m
+            do i=1,l
                x01 = a01(i,j,k)
                x02 = a02(i,j,k)
                x03 = a03(i,j,k)
@@ -115,15 +115,15 @@
          enddo
        enddo
 !
-       mean_u = mean_u/float(l+2)/float(m+2)/float(n+2)       
-       mean_v = mean_v/float(l+2)/float(m+2)/float(n+2)       
-       mean_w = mean_w/float(l+2)/float(m+2)/float(n+2)       
+       mean_u = mean_u/float(l)/float(m)/float(n)       
+       mean_v = mean_v/float(l)/float(m)/float(n)       
+       mean_w = mean_w/float(l)/float(m)/float(n)       
 !
 ! compute energy dissipation / turbulent kinetic energy
 ! maybe not the most efficent way....      
-       do k=1,n
-         do j=1,m
-            do i=1,l
+       do k=2,n-1
+         do j=2,m-1
+            do i=2,l-1
 
 ! compute u_y
                 u_y = 0.5*(vel_u(i,j+1,k)-vel_u(i,j-1,k))

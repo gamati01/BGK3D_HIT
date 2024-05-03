@@ -144,7 +144,7 @@ OBJ  = storage.o \
        mod_tools.o \
        input.o \
        alloca.o \
-       bgk_HIT.o \
+       bgk3d_HIT.o \
        col_MC.o \
        finalize.o \
        diagno.o \
@@ -177,7 +177,7 @@ OBJ  = storage.o \
 #----------------------------------------------
 #
 all: $(MOD) $(OBJ) $(OBJ1)
-	$(FC) $(FOPT) $(OBJ) $(OBJ1) $(FIX) $(TRY) $(LIB) -o ../RUN/bgk_HIT.$(VER).x 
+	$(FC) $(FOPT) $(OBJ) $(OBJ1) $(FIX) $(TRY) $(LIB) -o ../RUN/bgk3d_HIT.$(VER).x 
 	@echo $(FINE)
 
 #----------------------------------------------

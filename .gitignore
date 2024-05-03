@@ -1,1 +1,6 @@
 *.o
+*.mod
+*.log
+*.vtk
+*.dat
+*.x
