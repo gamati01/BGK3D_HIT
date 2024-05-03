@@ -55,14 +55,12 @@ endif
 # version section
 #----------------------------------------------
 #
-#v default
+# default
 VER = step3
 #
-ifdef STEP3
- FIX=-DSTEP3
- GPU= -acc -Minfo=acc -DOPENACC -DFAST
- VER=step3
-endif
+FIX=-DSTEP3
+GPU= -acc -Minfo=acc -DOPENACC -DFAST
+VER=step3
 #
 ifdef STEP4
  FIX= -DSTEP4
@@ -117,7 +115,7 @@ endif
 #----------------------------------------------
 #
 ifdef GPUENABLE
- FIX+= -DGPUENABLE
+ FIX+= -DGPUENABLE -DOPENACC
  FOPT+=$(GPU) 
 endif
 #

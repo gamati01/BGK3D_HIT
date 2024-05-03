@@ -40,9 +40,9 @@
             call SYSTEM_CLOCK(countD0, count_rate, count_max)
             call time(tcountD0)
 !      
-            call prof_i(itime,m/2,n/2)
-            call prof_j(itime,l/2,n/2)
-            call prof_k(itime,l/2,m/2)
+!GA            call prof_i(itime,m/2,n/2)
+!GA            call prof_j(itime,l/2,n/2)
+!GA            call prof_k(itime,l/2,m/2)
 !           
             call diagno(itime)
 !
