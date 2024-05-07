@@ -35,7 +35,7 @@
        real(mystor), dimension(0:l+1,0:m+1,0:n+1) :: vel_u
        real(mystor), dimension(0:l+1,0:m+1,0:n+1) :: vel_v
        real(mystor), dimension(0:l+1,0:m+1,0:n+1) :: vel_w
-       real(mykind):: loctot(5), glotot(5)
+       real(mykind):: loctot(1:5), glotot(1:5)
 !       
        real(mykind):: diss,tke
        real(mykind):: rho,rhoinv
@@ -156,13 +156,13 @@
        enddo
 !
 !# time, dissipation, turbulent kinetic energy
-       dissip    = (2.0*svisc*diss)/float(l-2)/float(m-2)/float(n-2)     ! dissipation
-       loctot(1) = dissip                                          ! dissipation
-       loctot(2) = tke/float(l-2)/float(m-2)/float(n-2)                  ! turbulent kinetic energy
-       loctot(3) = ((svisc**3)/dissip)**(0.25)                     ! kolmogorov microscale
-       loctot(4) = sqrt(15.0*rms/diss)                             ! Taylor microscale
+       dissip    = (2.0*svisc*diss)/float(l-2)/float(m-2)/float(n-2) ! dissipation
+       loctot(1) = dissip                                           ! dissipation
+       loctot(2) = tke/float(l-2)/float(m-2)/float(n-2)             ! turbulent kinetic energy
+       loctot(3) = ((svisc**3)/dissip)**(0.25)                      ! kolmogorov microscale
+       loctot(4) = sqrt(15.0*rms/diss)                              ! Taylor microscale
 !
-       call mpi_reduce(loctot,glotot,4,MYMPIREAL,mpi_sum,0,lbecomm,ierr)
+       call mpi_reduce(loctot(1),glotot(1),4,MYMPIREAL,mpi_sum,0,lbecomm,ierr)
 !
        if(myrank.eq.0) then
           dissip = glotot(1)/float(nprocs)

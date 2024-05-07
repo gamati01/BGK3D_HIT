@@ -61,7 +61,7 @@
             call vtk_xy_bin(itime,n/2)
             call vtk_xz_bin(itime,m/2)
             call vtk_yz_bin(itime,l/2)
-            call vtk_3d_bin(itime)
+!            call vtk_3d_bin(itime)
          endif
 !         
 ! get timing/profiling values

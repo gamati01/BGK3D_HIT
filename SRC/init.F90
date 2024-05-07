@@ -72,6 +72,9 @@
         j0= offset(2)
         k0= offset(3)
 !
+! check
+        write(6,*) "GA:", myrank, i0, j0, k0, u0
+!
 !        do k = 0, n+1
 !           z = (2.0*pi*(float(k)-0.5)/float(lz))
 !           write(6,*) float(k)-0.5, z
