@@ -86,6 +86,7 @@
               y = (2.0*pi*(float(j0+j)-0.5)/float(ly))
               do i = 0, l+1
                  x = (2.0*pi*(float(i0+i)-0.5)/float(lx))
+!                 
                  xj = u0*sin(x)*cos(y)*cos(z)
                  yj =-u0*cos(x)*sin(y)*cos(z)
                  zj = zero

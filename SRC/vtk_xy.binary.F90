@@ -64,7 +64,7 @@
         write(52,'(A11,I10,A1,I10,A1,I10)') 'DIMENSIONS ',l,' ',m,' ',1
         write(52,'(A7,I10,A1,I10,A1,I10)')  'ORIGIN ',offset(1)+1,' ' &
                                                      ,offset(2)+1,' ' &
-                                                     ,offset(3)+1+k0
+                                                     ,offset(3)+k0
         write(52,'(A8,I10,A1,I10,A1,I10)') 'SPACING ',1,' ',1,' ',1     
         write(52,'(A10,I10)')'POINT_DATA ',l*m*1
 !

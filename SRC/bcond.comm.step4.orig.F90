@@ -121,7 +121,7 @@
            enddo
 !$acc end kernels
 !        
-!           call mpi_barrier(lbecomm,ierr)
+           call mpi_barrier(lbecomm,ierr)
 !
 ! comms along z - 
 !
@@ -214,7 +214,7 @@
            enddo
 !$acc end kernels
 !                  
-!           call mpi_barrier(lbecomm,ierr)
+           call mpi_barrier(lbecomm,ierr)
 !
 ! comms along x - 
 !        
@@ -310,7 +310,7 @@
            enddo
 !$acc end kernels
 !
-!        call mpi_barrier(lbecomm,ierr)
+        call mpi_barrier(lbecomm,ierr)
 !
 ! comms along y - 
 !        

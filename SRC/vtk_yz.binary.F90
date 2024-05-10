@@ -62,7 +62,7 @@
         write(54,'(A6)') 'BINARY'
         write(54,'(A25)')'DATASET STRUCTURED_POINTS'
         write(54,'(A11,I10,A1,I10,A1,I10)') 'DIMENSIONS ',1,' ',m,' ',n
-        write(54,'(A7,I10,A1,I10,A1,I10)')  'ORIGIN ',offset(1)+1+i0,' ' &
+        write(54,'(A7,I10,A1,I10,A1,I10)')  'ORIGIN ',offset(1)+i0,' ' &
                                                      ,offset(2)+1,' ' &
                                                      ,offset(3)+1
         write(54,'(A8,I10,A1,I10,A1,I10)') 'SPACING ',1,' ',1,' ',1     
