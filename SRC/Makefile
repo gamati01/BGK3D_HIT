@@ -45,9 +45,12 @@ endif
 # Galileo
 ifdef INTEL
  CC = mpiicc
- FC = mpiifort
- FOPT = -O3 -xCORE-AVX512 -mtune=skylake-avx512  -assume contiguous_pointer
- OPT  = -O3 -xCORE-AVX512 -mtune=skylake-avx512  -assume contiguous_pointer
+# FC = mpiifort
+ FC = mpiifx
+# FOPT = -O3 -xCORE-AVX512 -mtune=skylake-avx512  -assume contiguous_pointer
+# OPT  = -O3 -xCORE-AVX512 -mtune=skylake-avx512  -assume contiguous_pointer
+ FOPT = -O3 -assume contiguous_pointer
+ OPT  = -O3 -assume contiguous_pointer
  mpiP =
 endif
 #
