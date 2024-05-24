@@ -230,7 +230,7 @@
            n10 = x10-e10
            n11 = x11-e11
            n12 = x12-e12
-           n13 = x13-e03
+           n13 = x13-e13
            n14 = x14-e14
            n15 = x15-e15
            n16 = x16-e16
@@ -300,6 +300,7 @@
 ! adding turbulent viscosity
            Ts = 1/(2*omega1) + sqrt(18*(cteS)**2 *Ptotal+(1/omega1)**2)/2
            omega = 1/Ts
+           stop
 !
 #endif                  
 !
@@ -310,14 +311,17 @@
         forcex = zero
         forcey = fgrad*rho
         forcez = zero
+           stop
 # elif FORCING_Z
         forcex = zero
         forcex = zero
         forcez = fgrad*rho
+           stop
 # else
         forcex = fgrad*rho
         forcey = zero
         forcez = zero
+           stop
 # endif
 #endif
 !

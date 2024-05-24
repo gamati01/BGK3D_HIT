@@ -81,18 +81,18 @@
 !        enddo
 !
         do k = 0, n+1
-           z = (2.0*pi*(float(k0+k)-0.5)/float(lz))
+           z = (real(k0+k)-0.5)/real(lz)
            do j = 0, m+1
-              y = (2.0*pi*(float(j0+j)-0.5)/float(ly))
+              y = (real(j0+j)-0.5)/real(ly)
               do i = 0, l+1
-                 x = (2.0*pi*(float(i0+i)-0.5)/float(lx))
+                 x = (real(i0+i)-0.5)/real(lx)
 !                 
-                 xj = u0*sin(x)*cos(y)*cos(z)
-                 yj =-u0*cos(x)*sin(y)*cos(z)
+                 xj = u0*sin(2*pi*x)*cos(2*pi*y)*cos(2*pi*z)
+                 yj =-u0*cos(2*pi*x)*sin(2*pi*y)*cos(2*pi*z)
                  zj = zero
 !
                  crho = uno + ((u0*u0)/(16.0*3.0))* &
-                         (cos(2*x)+cos(2*y))*(cos(2*z)+2)
+                         (cos(4*pi*x)+cos(4*pi*y))*(cos(4*pi*z)+2)
 !
                  cvsq=xj*xj+yj*yj+zj*zj
 !
