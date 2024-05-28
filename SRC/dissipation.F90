@@ -250,6 +250,7 @@
         end do
         end do
         end do
+!$acc end parallel
 !
 !# time, dissipation, turbulent kinetic energy
        loctot(1) = diss                                            ! dissipation
