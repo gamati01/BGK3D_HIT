@@ -67,7 +67,11 @@
         real(mykind) :: Ptotal,Ts
 !        
                 parameter(pi=3.141592653589793238462643383279)
-
+!
+! start timing (for collision)
+       call SYSTEM_CLOCK(countC0, count_rate, count_max)
+       call time(tcountC0)
+!
 #ifdef DEBUG_3
         real(mykind) :: cte
         character(len=17) :: file_nameD
@@ -424,6 +428,12 @@
 3131  format(3(i,1x),3(e14.6,1x))
         close(41)
 #endif
+!
+! stop timing (for collision)
+      call SYSTEM_CLOCK(countC1, count_rate, count_max)
+      call time(tcountC1)
+      time_coll = time_coll + real(countC1-countC0)/(count_rate)
+      time_coll1 = time_coll1 + tcountC1-tcountC0
 !
 #ifdef DEBUG_2
         if(myrank == 0) then

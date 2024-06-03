@@ -20,14 +20,14 @@
 !     *****
 !=====================================================================
 !
-      subroutine finalize(itfin)
+      subroutine finalize(itstart,itfin)
 !
       use storage
       use timing
 !
       implicit none
 
-      integer:: ierr, itfin
+      integer:: ierr, itfin, itstart
       real(mykind):: knorm
 !
 !normalization in kB      
@@ -63,6 +63,9 @@
                                float(n+2)*float(m+2)*float(itfin)*knorm/timeX
 !      write(38,*) "#", myrank, ":Memory (stop) --->", mem_stop
 !
+      if(myrank==0) then
+      endif
+!      
 ! free derived datatype
       call MPI_type_free(xyplane,ierr)
       call MPI_type_free(yzplane,ierr)
@@ -71,10 +74,32 @@
       call mpi_barrier(lbecomm,ierr)
 !
       if(myrank==0) then
-          write(6,9999)
-          write(6,2000) time_loop, time_loop1
-          write(6,*) "INFO: That's all Folks!!!!!! "
-          write(6,9999)
+!
+         open(69,file='bgk.perf',  status='unknown')
+         write(69,9999)
+         write(69,1100) time_init, time_init1
+         write(69,1101) time_loop, time_loop1
+         write(69,1102) time_coll, time_coll1
+         write(69,1103) time_dg, time_dg1
+         write(69,1115) time_mp, time_mp1
+         write(69,9999)
+         write(69,3000) float(lx)*float(ly)*float(lz)* & 
+                       float(itfin-itstart)/          & 
+                       (time_loop*1000*1000*1000)
+         write(69,1216) (time_loop-time_coll-time_dg-time_mp)/time_loop,&
+     &              (time_loop1-time_coll1-time_dg1-time_mp1)/time_loop1
+
+         write(69,9999)
+         close(69)
+!         
+         write(6,9999)
+         write(6,*) "INFO: That's all Folks!!!!!! "
+         write(6,2000) time_loop, time_loop1
+         write(6,3000) float(lx)*float(ly)*float(lz)* & 
+                       float(itfin-itstart)/          & 
+                       (time_loop*1000*1000*1000)
+         write(6,*) "INFO: That's all Folks!!!!!! "
+         write(6,9999)
       endif      
 !      
       call MPI_finalize(ierr)
@@ -92,6 +117,7 @@
 1215  format(" # Ratio MPI  ",2(f7.3,1x))
 1216  format(" # Check      ",2(f7.3,1x))
 2000  format(" # loop   time",2(e14.6,1x))
+3000  format(" # GLUPs      ",1(e14.6))
 !1110  format(" # Memory (start,stop)",2(f14.6,1x), "MB")  ! double precision only
 !
 #ifdef DEBUG_1

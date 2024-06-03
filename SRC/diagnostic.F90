@@ -36,7 +36,7 @@
          
          if(mod(itime,icheck)==0) then
 !                 
-! start timing       
+! start timing (diagnostic)      
             call SYSTEM_CLOCK(countD0, count_rate, count_max)
             call time(tcountD0)
 !      
@@ -50,13 +50,6 @@
             call probe_global(itime,lz/2,ly/2,lz/2,88) 
             call mpi_barrier(MPI_COMM_WORLD,ierr)
 ! 
-! stop timing      
-            call SYSTEM_CLOCK(countD1, count_rate, count_max)
-            call time(tcountD1)
-            time_dg  = time_dg  + real(countD1-countD0)/(count_rate)
-            time_dg1 = time_dg1 + tcountD1-tcountD0
-         endif
-!
          if(mod(itime,ivtim)==0) then
             call vtk_xy_bin(itime,n/2)
             call vtk_xz_bin(itime,m/2)
@@ -64,6 +57,13 @@
 !            call vtk_3d_bin(itime)
          endif
 !         
+! stop timing      
+            call SYSTEM_CLOCK(countD1, count_rate, count_max)
+            call time(tcountD1)
+            time_dg  = time_dg  + real(countD1-countD0)/(count_rate)
+            time_dg1 = time_dg1 + tcountD1-tcountD0
+         endif
+!
 ! get timing/profiling values
          if (mod(itime,isignal).eq.0) then
             if (myrank == 0 ) then

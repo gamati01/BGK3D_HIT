@@ -279,6 +279,7 @@
 !
         call mpi_barrier(lbecomm,ierr)
 !
+! stop timing        
         call time(tcountA1)
         call SYSTEM_CLOCK(countA1, count_rate, count_max)
         time_mp = time_mp + real(countA1-countA0)/(count_rate)

@@ -45,6 +45,10 @@
 ! 1) Set-up section      
 !------------------------------------------------------
 !      
+! start timing (for set-up section)
+      call SYSTEM_CLOCK(countG0, count_rate, count_max)
+      call time(tcountG0)
+!      
 ! reading run input
       call input(itfin,icheck,itstart,ivtim,isignal,itsave)
 !      
@@ -77,7 +81,7 @@
       call MPI_PCONTROL( 1 )
 #endif
 !
-! start timing       
+! start timing (for loop)      
       call SYSTEM_CLOCK(countE0,count_rate,count_max)
       call time(tcountE0)
 !
@@ -129,7 +133,7 @@
 ! 3) Close everything
 !------------------------------------------------------
 !
-! stop timing      
+! stop timing (for loop)     
       call SYSTEM_CLOCK(countE1, count_rate, count_max)
       call time(tcountE1)
       time_loop = real(countE1-countE0)/(count_rate)
@@ -141,6 +145,6 @@
 #endif
       
 ! finalize all
-      call finalize(itfin)    
+      call finalize(itstart,itfin)    
 !
       end program bgk_HIT
