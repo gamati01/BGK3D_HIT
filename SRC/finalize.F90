@@ -85,7 +85,7 @@
          write(69,9999)
          write(69,3000) float(lx)*float(ly)*float(lz)* & 
                        float(itfin-itstart)/          & 
-                       (time_loop*1000*1000*1000)
+                       (time_loop1*1000*1000*1000)
          write(69,1216) (time_loop-time_coll-time_dg-time_mp)/time_loop,&
      &              (time_loop1-time_coll1-time_dg1-time_mp1)/time_loop1
 
