@@ -18,6 +18,27 @@
 !       integer variables used: 
 !       real variables used: 
 !       open the following unit: 
+!
+!       velocity directions:
+!        direction  1    unit vector = ( 1,-1, 0)   modulo 2
+!        direction  2    unit vector = ( 1, 0,-1)   modulo 2
+!        direction  3    unit vector = ( 1, 1, 0)   modulo 2
+!        direction  4    unit vector = ( 1, 0, 1)   modulo 2
+!        direction  5    unit vector = ( 1, 0, 0)   modulo 1
+!        direction  6    unit vector = ( 0, 0, 1)   modulo 1
+!        direction  7    unit vector = ( 0, 1, 1)   modulo 2
+!        direction  8    unit vector = ( 0, 1, 0)   modulo 1
+!        direction  9    unit vector = ( 0, 1,-1)   modulo 2
+!        direction 10    unit vector = (-1,-1, 0)   modulo 2
+!        direction 11    unit vector = (-1, 0,-1)   modulo 2
+!        direction 12    unit vector = (-1, 1, 0)   modulo 2
+!        direction 13    unit vector = (-1, 0, 1)   modulo 2
+!        direction 14    unit vector = (-1, 0, 0)   modulo 1
+!        direction 15    unit vector = ( 0, 0,-1)   modulo 1
+!        direction 16    unit vector = ( 0,-1,-1)   modulo 2
+!        direction 17    unit vector = ( 0,-1, 0)   modulo 1
+!        direction 18    unit vector = ( 0,-1, 1)   modulo 2
+!        direction 19    unit vector = ( 0, 0, 0)   modulo 0
 !                              
 !     *****
 ! =====================================================================
