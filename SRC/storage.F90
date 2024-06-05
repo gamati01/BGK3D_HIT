@@ -58,6 +58,8 @@
 !
         real(mykind), dimension(1:19) :: cx,cy,cz
         integer, dimension(1:19) :: icx,icy,icz
+!        
+        integer, dimension(:,:,:), allocatable :: mask
 !
         real(mystor), dimension(:,:,:), contiguous, pointer :: a01,a02,a03,a04,a05
         real(mystor), dimension(:,:,:), contiguous, pointer :: a06,a07,a08,a09,a10

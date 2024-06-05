@@ -20,13 +20,14 @@
 !     *****
 !=====================================================================
 !
-        subroutine boundaries
+        subroutine boundaries(itime)
 !
         use timing
         use storage
 !
         implicit none
         integer:: ierr, i
+        integer:: itime
 !
 #ifdef DEBUG_2
         if(myrank == 0) then
@@ -40,7 +41,7 @@
         call bcond_comm_step10
 #elif STEP9
 ! as STEP8 with "Overlap comms-computation and async"
-        call bcond_comm_step9
+        call bcond_comm_step9(itime)
 #elif STEP8
 ! as STEP7 with "Overlap comms-computation"
         call bcond_comm_step8

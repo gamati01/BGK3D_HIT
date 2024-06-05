@@ -41,12 +41,12 @@
 !
         parameter(pi=3.141592653589793238462643383279)
 !
-#ifdef STEP10
+#ifdef STEP9
 ! first set everything to border        
         do k = 1, n
            do j = 1, m
               do i = 1, l
-                 mask(i,j,k) = uno
+                 mask(i,j,k) = 1
               end do
            end do
         end do
@@ -55,7 +55,7 @@
         do k = 1+border, n-border
            do j = 1+border, m-border
               do i = 1+border, l-border
-                 mask(i,j,k) = zero
+                 mask(i,j,k) = 0
               end do
            end do
         end do

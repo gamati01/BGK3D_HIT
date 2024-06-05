@@ -18,10 +18,12 @@
 !
 !     *****
 !=====================================================================
-subroutine alloca()
+!
+      subroutine alloca()
+!              
       use storage; 
       use timing
-
+!
       implicit none
 !
       integer i,j,k
@@ -35,12 +37,13 @@ subroutine alloca()
       allocate(field2post(0:l+1,0:m+1,0:n+1))
       allocate(field3post(0:l+1,0:m+1,0:n+1))
 !      
-      allocate(mask(1:l,1:m,1:n))
 !     
       temp1 => null()
       temp2 => null()
       temp3 => null()
 #else
+      allocate(mask(1:l,1:m,1:n))
+!      
       allocate(field1(0:l+1,0:m+1,0:n+1))
       allocate(field2(0:l+1,0:m+1,0:n+1))
       allocate(field3(0:l+1,0:m+1,0:n+1))

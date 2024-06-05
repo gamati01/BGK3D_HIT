@@ -19,7 +19,7 @@
 !     *****
 !=====================================================================
 !
-        subroutine bcond_comm_step9
+        subroutine bcond_comm_step9(itime)
 !
         use timing
         use storage
@@ -28,11 +28,11 @@
         implicit none
 !
         integer      :: i,j,k 
+        integer      :: itime
         integer      :: tag, ierr
         integer      :: msgsizeX
         integer      :: msgsizeY
         integer      :: msgsizeZ
-        integer      :: opt
         integer      :: status(MPI_STATUS_SIZE)
 !
         real(mystor), dimension(:,:,:), allocatable, save :: bufferXINP
@@ -70,25 +70,25 @@
         call time(tcountA0)
 !
         if (.not. allocated(bufferXINP)) then
-           allocate(bufferXINP (0:m+1,0:n+1,1:3))
-           allocate(bufferXINM (0:m+1,0:n+1,1:3))
-           allocate(bufferXOUTP(0:m+1,0:n+1,1:3))
-           allocate(bufferXOUTM(0:m+1,0:n+1,1:3))
+           allocate(bufferXINP (0:m+1,0:n+1,1:5))
+           allocate(bufferXINM (0:m+1,0:n+1,1:5))
+           allocate(bufferXOUTP(0:m+1,0:n+1,1:5))
+           allocate(bufferXOUTM(0:m+1,0:n+1,1:5))
 !           
-           allocate(bufferYINP (0:l+1,0:n+1,1:3))
-           allocate(bufferYINM (0:l+1,0:n+1,1:3))
-           allocate(bufferYOUTP(0:l+1,0:n+1,1:3))
-           allocate(bufferYOUTM(0:l+1,0:n+1,1:3))
+           allocate(bufferYINP (0:l+1,0:n+1,1:5))
+           allocate(bufferYINM (0:l+1,0:n+1,1:5))
+           allocate(bufferYOUTP(0:l+1,0:n+1,1:5))
+           allocate(bufferYOUTM(0:l+1,0:n+1,1:5))
 !           
-           allocate(bufferZINP (0:l+1,0:m+1,1:3))
-           allocate(bufferZINM (0:l+1,0:m+1,1:3))
-           allocate(bufferZOUTP(0:l+1,0:m+1,1:3))
-           allocate(bufferZOUTM(0:l+1,0:m+1,1:3))
+           allocate(bufferZINP (0:l+1,0:m+1,1:5))
+           allocate(bufferZINM (0:l+1,0:m+1,1:5))
+           allocate(bufferZOUTP(0:l+1,0:m+1,1:5))
+           allocate(bufferZOUTM(0:l+1,0:m+1,1:5))
         endif
 !        
-        msgsizeX = (n+2)*(m+2)*3
-        msgsizeY = (l+2)*(n+2)*3
-        msgsizeZ = (l+2)*(m+2)*3
+        msgsizeX = (n+2)*(m+2)*5
+        msgsizeY = (l+2)*(n+2)*5
+        msgsizeZ = (l+2)*(m+2)*5
 !
 ! Adding directly handling of self-copies. This is done as an
 ! optimization but also because CUDA-aware MPI_Sendrecv uses inefficient
@@ -119,37 +119,45 @@
 !----------------------------------------------------------------
 ! First pack data.....                
         call time(tcountZ0)
-!$acc kernels async
+!$acc kernels
         do j = 0,m+1
            do i = 0,l+1
 ! z+ direction              
-              bufferZINP(i,j,1)=field1(i,j,n)
-              bufferZINP(i,j,2)=field2(i,j,n)
-              bufferZINP(i,j,3)=field3(i,j,n)
+              bufferZINP(i,j,1)=a04(i,j,n)
+              bufferZINP(i,j,2)=a06(i,j,n)
+              bufferZINP(i,j,3)=a07(i,j,n)
+              bufferZINP(i,j,4)=a13(i,j,n)
+              bufferZINP(i,j,5)=a18(i,j,n)
 !
 ! z- direction              
-              bufferZINM(i,j,1)=field1(i,j,1)
-              bufferZINM(i,j,2)=field2(i,j,1)
-              bufferZINM(i,j,3)=field3(i,j,1)
+              bufferZINM(i,j,1)=a02(i,j,1)
+              bufferZINM(i,j,2)=a09(i,j,1)
+              bufferZINM(i,j,3)=a11(i,j,1)
+              bufferZINM(i,j,4)=a15(i,j,1)
+              bufferZINM(i,j,5)=a16(i,j,1)
            enddo
         enddo
-!$acc end kernels 
+!$acc end kernels
         call time(tcountZ1)
         timeZ = timeZ + (tcountZ1 -tcountZ0)
 !
         call time(tcountX0)
-!$acc kernels async
+!$acc kernels
         do k = 0,n+1
            do j = 0,m+1
 ! x+ direction              
-              bufferXINP(j,k,1)=field1(l,j,k)
-              bufferXINP(j,k,2)=field2(l,j,k)
-              bufferXINP(j,k,3)=field3(l,j,k)
+              bufferXINP(j,k,1)=a01(l,j,k)
+              bufferXINP(j,k,2)=a02(l,j,k)
+              bufferXINP(j,k,3)=a03(l,j,k)
+              bufferXINP(j,k,4)=a04(l,j,k)
+              bufferXINP(j,k,5)=a05(l,j,k)
 !
 ! x- direction              
-              bufferXINM(j,k,1)=field1(1,j,k)
-              bufferXINM(j,k,2)=field2(1,j,k)
-              bufferXINM(j,k,3)=field3(1,j,k)
+              bufferXINM(j,k,1)=a10(1,j,k)
+              bufferXINM(j,k,2)=a11(1,j,k)
+              bufferXINM(j,k,3)=a12(1,j,k)
+              bufferXINM(j,k,4)=a13(1,j,k)
+              bufferXINM(j,k,5)=a14(1,j,k)
            enddo
         enddo
 !$acc end kernels
@@ -157,25 +165,28 @@
         timeX = timeX + (tcountX1 -tcountX0)
 !
         call time(tcountY0)
-!$acc kernels async
+!$acc kernels
         do k = 0,n+1
            do i = 0,l+1
 ! y+ direction              
-              bufferYINP(i,k,1)=field1(i,m,k)
-              bufferYINP(i,k,2)=field2(i,m,k)
-              bufferYINP(i,k,3)=field3(i,m,k)
+              bufferYINP(i,k,1)=a03(i,m,k)
+              bufferYINP(i,k,2)=a07(i,m,k)
+              bufferYINP(i,k,3)=a08(i,m,k)
+              bufferYINP(i,k,4)=a09(i,m,k)
+              bufferYINP(i,k,5)=a12(i,m,k)
 !
 ! y- direction              
-              bufferYINM(i,k,1)=field1(i,1,k)
-              bufferYINM(i,k,2)=field2(i,1,k)
-              bufferYINM(i,k,3)=field3(i,1,k)
+              bufferYINM(i,k,1)=a01(i,1,k)
+              bufferYINM(i,k,2)=a10(i,1,k)
+              bufferYINM(i,k,3)=a16(i,1,k)
+              bufferYINM(i,k,4)=a17(i,1,k)
+              bufferYINM(i,k,5)=a18(i,1,k)
            enddo
         enddo
 !$acc end kernels
         call time(tcountY1)
         timeY = timeY + (tcountY1 -tcountY0)
 !           
-!$acc wait 
 !----------------------------------------------------------------
 ! Second receive data
         tag = 34
@@ -252,22 +263,11 @@
                           lbecomm, reqs_left(2), ierr)
 !$acc end host_data
 !
-! -----------------------------------------------------------------------------------
+!----------------------------------------------------------------
+! overlap collision (only bulk)                  
+!
+        call col_MC_masked(itime,0)
 !                  
-! overlap region
-!$acc kernels async
-        do k = 1, n
-           do j = 1, m
-              do i = 1, l
-                 temp1(i,j,k) = field1(i,j,k)
-                 temp2(i,j,k) = field2(i,j,k)
-                 temp3(i,j,k) = field3(i,j,k)
-              end do
-           end do
-        end do
-!$acc end kernels
-
-!        
 !----------------------------------------------------------------
 ! forth  wait...           
         call MPI_Waitall(2,reqs_up   ,MPI_STATUSES_IGNORE, ierr)
@@ -277,23 +277,27 @@
         call MPI_Waitall(2,reqs_left ,MPI_STATUSES_IGNORE, ierr)
         call MPI_Waitall(2,reqs_right,MPI_STATUSES_IGNORE, ierr)
 !
-!        call mpi_barrier(lbecomm,ierr)
+        call mpi_barrier(lbecomm,ierr)
 !
 !----------------------------------------------------------------
 !fifth unpack data
         call time(tcountZ0)
-!$acc kernels async 
+!$acc kernels
         do j = 0,m+1
            do i = 0,l+1
 ! z+ direction
-              temp1(i,j,0)=bufferZOUTP(i,j,1)
-              temp2(i,j,0)=bufferZOUTP(i,j,2)
-              temp3(i,j,0)=bufferZOUTP(i,j,3)
+              a04(i,j,0)=bufferZOUTP(i,j,1)
+              a06(i,j,0)=bufferZOUTP(i,j,2)
+              a07(i,j,0)=bufferZOUTP(i,j,3)
+              a13(i,j,0)=bufferZOUTP(i,j,4)
+              a18(i,j,0)=bufferZOUTP(i,j,5)
 !
 ! z- direction
-              temp1(i,j,n+1) = bufferZOUTM(i,j,1)
-              temp2(i,j,n+1) = bufferZOUTM(i,j,2)
-              temp3(i,j,n+1) = bufferZOUTM(i,j,3)
+              a02(i,j,n+1) = bufferZOUTM(i,j,1)
+              a09(i,j,n+1) = bufferZOUTM(i,j,2)
+              a11(i,j,n+1) = bufferZOUTM(i,j,3)
+              a15(i,j,n+1) = bufferZOUTM(i,j,4)
+              a16(i,j,n+1) = bufferZOUTM(i,j,5)
            enddo
         enddo
 !$acc end kernels
@@ -301,18 +305,22 @@
         timeZ = timeZ + (tcountZ1 -tcountZ0)
 !
         call time(tcountX0)
-!$acc kernels async 
+!$acc kernels
         do k = 0,n+1
            do j = 0,m+1
 ! x+ direction
-              temp1(0,j,k) = bufferXOUTP(j,k,1)
-              temp2(0,j,k) = bufferXOUTP(j,k,2)
-              temp3(0,j,k) = bufferXOUTP(j,k,3)
+              a01(0,j,k) = bufferXOUTP(j,k,1)
+              a02(0,j,k) = bufferXOUTP(j,k,2)
+              a03(0,j,k) = bufferXOUTP(j,k,3)
+              a04(0,j,k) = bufferXOUTP(j,k,4)
+              a05(0,j,k) = bufferXOUTP(j,k,5)
 !
 ! x- direction
-              temp1(l+1,j,k) = bufferXOUTM(j,k,1)
-              temp2(l+1,j,k) = bufferXOUTM(j,k,2)
-              temp3(l+1,j,k) = bufferXOUTM(j,k,3)
+              a10(l+1,j,k) = bufferXOUTM(j,k,1)
+              a11(l+1,j,k) = bufferXOUTM(j,k,2)
+              a12(l+1,j,k) = bufferXOUTM(j,k,3)
+              a13(l+1,j,k) = bufferXOUTM(j,k,4)
+              a14(l+1,j,k) = bufferXOUTM(j,k,5)
            enddo
         enddo
 !$acc end kernels
@@ -320,25 +328,29 @@
         timeX = timeX + (tcountX1 -tcountX0)
 !           
         call time(tcountY0)
-!$acc kernels async 
+!$acc kernels
         do k = 0,n+1
            do i = 0,l+1
 ! y+ direction
-              temp1(i,0,k)=bufferYOUTP(i,k,1)
-              temp2(i,0,k)=bufferYOUTP(i,k,2)
-              temp3(i,0,k)=bufferYOUTP(i,k,3)
+              a03(i,0,k)=bufferYOUTP(i,k,1)
+              a07(i,0,k)=bufferYOUTP(i,k,2)
+              a08(i,0,k)=bufferYOUTP(i,k,3)
+              a09(i,0,k)=bufferYOUTP(i,k,4)
+              a12(i,0,k)=bufferYOUTP(i,k,5)
 !                 
 ! y- direction
-              temp1(i,m+1,k)=bufferYOUTM(i,k,1)
-              temp2(i,m+1,k)=bufferYOUTM(i,k,2)
-              temp3(i,m+1,k)=bufferYOUTM(i,k,3)
+              a01(i,m+1,k)=bufferYOUTM(i,k,1)
+              a10(i,m+1,k)=bufferYOUTM(i,k,2)
+              a16(i,m+1,k)=bufferYOUTM(i,k,3)
+              a17(i,m+1,k)=bufferYOUTM(i,k,4)
+              a18(i,m+1,k)=bufferYOUTM(i,k,5)
            enddo
         enddo
 !$acc end kernels
-
-!$acc wait
         call time(tcountY1)
         timeY = timeY + (tcountY1 -tcountY0)
+!
+        call mpi_barrier(lbecomm,ierr)
 !
         call time(tcountA1)
         call SYSTEM_CLOCK(countA1, count_rate, count_max)

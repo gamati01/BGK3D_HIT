@@ -106,14 +106,11 @@
       call SYSTEM_CLOCK(countE0,count_rate,count_max)
       call time(tcountE0)
 !
-#ifdef STEP10
-!$acc data copy(field1,field2,field3,field1post,field2post,field3post,temp1,temp2,temp3,mask)
-#else 
 !$acc data copy(a01,a02,a03,a04,a05,a06,a07,a08,a09,a10,   &
 !$acc&          a11,a12,a13,a14,a15,a16,a17,a18,a19,       &
 !$acc&          b01,b02,b03,b04,b05,b06,b07,b08,b09,b10,   &
-!$acc&          b11,b12,b13,b14,b15,b16,b17,b18,b19) 
-#endif
+!$acc&          b11,b12,b13,b14,b15,b16,b17,b18,b19,       &
+!$acc&          mask)
 !
 ! GA: check
       call vtk_xy_bin(0,n/2)
@@ -129,21 +126,17 @@
 
 !
 ! 2.1) compute boundaries      
-         call boundaries         ! MPI calls here
+         call boundaries(itime)         ! MPI calls here
 
 ! 2.2) Collision (fused) step
-         call col_MC(itime)      ! Completely local...
 
-!#ifdef STEP10         
-! do something on GPU 
-!         call do_somethingGPU_masked(uno)
-!!#elif STEP9         
-!! do something on GPU 
-!         call do_somethingGPU_overlap
-!#elif STEP8         
-!! do something on GPU 
-!         call do_somethingGPU_overlap
-!#else
+#ifdef STEP9         
+! masked collision  (compute border)
+! border update must be the last one (for pointers update)
+         call col_MC_masked(itime,1)      
+#else
+         call col_MC(itime)      ! Completely local...
+#endif
 !
 ! 2.3) diagnostic         
          call diagnostic(itime,icheck,ivtim,itsave,isignal,itfin)

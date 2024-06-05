@@ -107,13 +107,15 @@
          write(6,*) 'Validation   = Standard '
 #endif
 !
-#ifdef STEP10
+#ifdef STEP9
          write(6,*) 'Border       =', border
 #endif
 !         
 #ifdef MPIP
          write(6,*) 'mpiP profiling enabled'
 #endif
+         write(6,*) "INFO:", zero, uno
+         write(6,*) '*********** implementation ******************'
 
          write(16,*) ' '
          write(16,*) '*********** size of the lattice **************'
@@ -164,7 +166,7 @@
          write(16,*) 'Validation   = Standard '
 #endif
 !
-#ifdef STEP10
+#ifdef STEP9
          write(16,*) 'Border       =', border
 #endif
 !         
@@ -172,6 +174,7 @@
          write(16,*) 'mpiP profiling enabled'
 #endif
 
+         write(16,*) "INFO:", zero, uno
          write(16,*) '*********************************************'
       endif
 

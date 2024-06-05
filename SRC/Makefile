@@ -65,43 +65,17 @@ FIX=-DSTEP3
 GPU= -acc -Minfo=acc -DOPENACC -DFAST
 VER=step3
 #
-ifdef STEP4
- FIX= -DSTEP4
- GPU= -acc -Minfo=acc -DOPENACC -DFAST
- VER=step4
-endif
-#
-ifdef STEP5
- FIX= -DSTEP5
- GPU= -acc -Minfo=acc -DOPENACC -DFAST
- VER=step5
-endif
-#
-ifdef STEP6
- FIX= -DSTEP6
- GPU= -acc -Minfo=acc -DOPENACC -DFAST
- VER=step6
-endif
-#
 ifdef STEP7
  FIX= -DSTEP7
  GPU= -acc -Minfo=acc -DOPENACC -DFAST
  VER=step7
 endif
 #
-ifdef STEP8
- FIX= -DSTEP8
- GPU= -acc -Minfo=acc -DOPENACC -DFAST
- OBJ1= bcond.comm.step8.o \
-       do_somethingGPU_overlap.o 
- VER=step8
-endif
-#
 ifdef STEP9
  FIX= -DSTEP9
  GPU= -acc -Minfo=acc -DOPENACC -DFAST
  OBJ1= bcond.comm.step9.o \
-       do_somethingGPU_overlap.o
+       col_MC_masked.o
  VER=step9
 endif
 #

@@ -140,6 +140,8 @@
         call time(tcountZ1)
         timeZ = timeZ + (tcountZ1 -tcountZ0)
 !
+        call mpi_barrier(lbecomm,ierr)
+!
         call time(tcountX0)
 !$acc kernels
         do k = 0,n+1
@@ -162,6 +164,8 @@
 !$acc end kernels
         call time(tcountX1)
         timeX = timeX + (tcountX1 -tcountX0)
+!
+        call mpi_barrier(lbecomm,ierr)
 !
         call time(tcountY0)
 !$acc kernels
@@ -186,6 +190,8 @@
         call time(tcountY1)
         timeY = timeY + (tcountY1 -tcountY0)
 !           
+        call mpi_barrier(lbecomm,ierr)
+!        
 !----------------------------------------------------------------
 ! Second receive data
         tag = 34
@@ -298,6 +304,8 @@
         call time(tcountZ1)
         timeZ = timeZ + (tcountZ1 -tcountZ0)
 !
+        call mpi_barrier(lbecomm,ierr)
+!
         call time(tcountX0)
 !$acc kernels
         do k = 0,n+1
@@ -321,6 +329,8 @@
         call time(tcountX1)
         timeX = timeX + (tcountX1 -tcountX0)
 !           
+        call mpi_barrier(lbecomm,ierr)
+!
         call time(tcountY0)
 !$acc kernels
         do k = 0,n+1
