@@ -34,7 +34,7 @@
       implicit none
 !
       integer:: i, uni
-      integer:: ierr, len                    ! mpi variables
+      integer:: ierr, len, tag                    ! mpi variables
       character*15 hname
       character*17 file_name1
       character*17 file_name2
@@ -130,6 +130,86 @@
 ! z dir
       call MPI_cart_shift(lbecomm, 2, 1, down(2), up(2), ierr)
 !
+! edges
+! xy plane
+!
+!    a01 --> front-left
+      tag=1001
+      call mpi_send(left(2),1,MPI_INT,rear(2),tag,   MPI_COMM_WORLD,ierr)
+      call mpi_recv(frontleft,1,MPI_INT,front(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!      
+!    a03 --> front-right
+      tag=1003
+      call mpi_send(right(2),1,MPI_INT,rear(2),tag,   MPI_COMM_WORLD,ierr)
+      call mpi_recv(frontright,1,MPI_INT,front(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!          
+!    a10 --> rear-left
+      tag=1010
+      call mpi_send(left(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(rearleft,1,MPI_INT,rear(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
+!    a12 --> rear-right
+      tag=1012
+      call mpi_send(right(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(rearright,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
+! xz plane
+! 
+!    a02 --> front-down
+      tag=1002
+      call mpi_send(down(2),1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(frontdown,1,MPI_INT,front(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!      
+!    a04 --> front-up
+      tag=1004
+      call mpi_send(up(2),1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(frontup  ,1,MPI_INT,front(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!      
+!    a11 --> rear-down
+      tag=1011
+      call mpi_send(down(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv( reardown,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!      
+!    a13 --> rear-up
+      tag=1013
+      call mpi_send(  up(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(   rearup,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!      
+!
+! yz plane
+!      
+!    a07 --> right-up
+      tag=1007
+      call mpi_send(   up(2),1,MPI_INT,left(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv( rightup,1,MPI_INT,right(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
+!    a09 --> right-down
+      tag=1009
+      call mpi_send( down(2),1,MPI_INT,left(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv( rightdown,1,MPI_INT,right(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
+!    a16 --> left-down
+      tag=1016
+      call mpi_send( down(2),1,MPI_INT,right(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv( leftdown,1,MPI_INT,left(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
+!    a18 --> left-up
+      tag=1018
+      call mpi_send(  up(2),1,MPI_INT,right(2),tag, MPI_COMM_WORLD,ierr)
+      call mpi_recv(   leftup,1,MPI_INT,left(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(MPI_COMM_WORLD,ierr)
+!
 ! yz plane is composed by single point (stride.ne.1)
       call MPI_type_vector((n+2)*(m+2), 1, l+2, MYMPIREAL, yzplane, ierr)
       call MPI_type_commit(yzplane,ierr)
@@ -222,13 +302,33 @@
       write(38,*) offset(1)  , offset(2)  , offset(3)
       write(38,*) offset(1)  , offset(2)  , offset(3)+n
 !      
+! write neighbours
+      write(38,*) "# my front task is ",  front(2)
+      write(38,*) "# my rear task is  ",   rear(2)
+      write(38,*) "# my left task is  ",   left(2)
+      write(38,*) "# my right task is ",  right(2)
+      write(38,*) "# my up task is    ",     up(2)
+      write(38,*) "# my down task is  ",   down(2)
+      write(38,*) "# my front-right task is ", frontright
+      write(38,*) "# my front-left task is  ", frontleft
+      write(38,*) "# my rear-right task is  ", rearright
+      write(38,*) "# my rear-left task is   ", rearleft
+      write(38,*) "# my front-up task is    ", frontup
+      write(38,*) "# my front-down task is  ", frontdown
+      write(38,*) "# my rear-up task is     ", rearup
+      write(38,*) "# my rear-down task is   ", reardown
+      write(38,*) "# my left-up task is     ", leftup
+      write(38,*) "# my left-down task is   ", leftdown
+      write(38,*) "# my right-up task is    ", rightup
+      write(38,*) "# my right-down task is  ", rightdown
+!      
 ! formats...
 3100      format(i6.6)
 
-#ifdef MDEBUG_1
+!#ifdef MDEBUG_1
       if(myrank == 0) then
          write(6,*) "DEBUG1: Exiting from sub. setup_mpi"
       endif
-#endif
+!#endif
 
       end subroutine setup_mpi

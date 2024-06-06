@@ -18,7 +18,6 @@
 !       integer variables defined:  l,n,l1,n1
 !       real variables defined: lx, ly, dt, p0, p1, p2, rf, qf
 !                               svisc, u0, omega,fgrad
-!                               a02, a04, a05, a06, a11, a13, a14, a15, a19
 !
 !     *****
 ! =====================================================================
@@ -34,6 +33,12 @@
         integer:: l, m, n                 ! local (task) size
         integer:: up(2),down(2),left(2)
         integer:: front(2),rear(2),right(2)
+        integer:: frontleft, frontright
+        integer:: rearleft, rearright
+        integer:: frontdown, frontup
+        integer:: reardown, rearup
+        integer:: rightdown, rightup
+        integer:: leftdown, leftup
 !
         integer, parameter::  mpid=3      ! mpi dimension
 !
