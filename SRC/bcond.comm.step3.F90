@@ -15,6 +15,13 @@
 !     TODO
 !       
 !     NOTES
+!       order of comms
+!       1) z+
+!       2) z-
+!       3) x+
+!       4) x-
+!       5) y+
+!       6) y-
 !
 !     *****
 !=====================================================================
@@ -48,8 +55,10 @@
         if (.not. allocated(bufferXIN)) then
            allocate(bufferXIN (0:m+1,0:n+1,1:5))
            allocate(bufferXOUT(0:m+1,0:n+1,1:5))
+!           
            allocate(bufferYIN (0:l+1,0:n+1,1:5))
            allocate(bufferYOUT(0:l+1,0:n+1,1:5))
+!           
            allocate(bufferZIN (0:l+1,0:m+1,1:5))
            allocate(bufferZOUT(0:l+1,0:m+1,1:5))
         endif
@@ -57,7 +66,7 @@
         msgsizeX = (n+2)*(m+2)*5
         msgsizeY = (l+2)*(n+2)*5
         msgsizeZ = (l+2)*(m+2)*5
-
+!
 !------------------------------------------------------------------------
 ! comms along z + 
 !
@@ -210,7 +219,7 @@
 ! comms along y + 
         call time(tcountY0)
 !        
-        tag = 3
+        tag = 03
 !        
 !$acc kernels
         do k = 0,n+1
@@ -244,7 +253,7 @@
 !
 ! comms along y - 
 !        
-        tag = 1
+        tag = 07
 !        
 !$acc kernels
         do k = 0,n+1

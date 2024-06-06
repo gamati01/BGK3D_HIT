@@ -253,20 +253,19 @@
 !$acc end parallel
 !
 !# time, dissipation, turbulent kinetic energy
-       loctot(1) = diss                                            ! dissipation
-       loctot(2) = tke                                             ! turbulent kinetic energy
+       loctot(1) = diss                                    ! dissipation
+       loctot(2) = tke                                     ! turbulent kinetic energy
 !
-       call mpi_reduce(loctot(1),glotot(1),4,MYMPIREAL,mpi_sum,0,lbecomm,ierr)
+       call mpi_reduce(loctot(1),glotot(1),2,MYMPIREAL,mpi_sum,0,lbecomm,ierr)
 !
        if(myrank.eq.0) then
           diss = glotot(1)
-          tke = glotot(2)/float(nprocs)
+          tke  = glotot(2)/float(nprocs)
 !
-          write(71,1004) itime                &
-                , float(itime)*dt                &
+          write(71,1004) itime                            &
+                , float(itime)*dt                         &
                 , tke/float(l)/float(m)/float(n)/(u0*u0)  &
-                , diss                           &
-                , diss
+                , diss                          
           flush(71)
        endif
 !

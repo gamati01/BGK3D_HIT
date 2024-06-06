@@ -47,7 +47,7 @@
             call diagno(itime)
 !
             call dissipation(itime)
-            call probe_global(itime,lz/2,ly/2,lz/2,88) 
+!            call probe_global(itime,lz/2,ly/2,lz/2,88) 
             call mpi_barrier(MPI_COMM_WORLD,ierr)
 ! 
          if(mod(itime,ivtim)==0) then

@@ -13,6 +13,13 @@
 !     OUTPUT
 !       none
 !     TODO
+!       order of comms (all together)
+!       1) z+
+!       2) z-
+!       3) x+
+!       4) x-
+!       5) y+
+!       6) y-
 !       
 !     NOTES
 !
@@ -85,7 +92,7 @@
            allocate(bufferZOUTM(0:l+1,0:m+1,1:5))
         endif
 !        
-        msgsizeX = (n+2)*(m+2)*5
+        msgsizeX = (m+2)*(n+2)*5
         msgsizeY = (l+2)*(n+2)*5
         msgsizeZ = (l+2)*(m+2)*5
 !
@@ -99,20 +106,20 @@
 !
 !------------------------------------------------------------------------
 !
-        if(proc_x == 1) then 
-                write(6,*) "ERROR: not enough tasks along x", proc_z
-                stop
-        endif
+!        if(proc_x == 1) then 
+!                write(6,*) "ERROR: not enough tasks along x", proc_z
+!                stop
+!        endif
 !
-        if(proc_y == 1) then 
-                write(6,*) "ERROR: not enough tasks along y", proc_z
-                stop
-        endif
+!        if(proc_y == 1) then 
+!                write(6,*) "ERROR: not enough tasks along y", proc_z
+!                stop
+!        endif
 !
-        if(proc_z == 1) then 
-                write(6,*) "ERROR: not enough tasks along z", proc_z
-                stop
-        endif
+!        if(proc_z == 1) then 
+!               write(6,*) "ERROR: not enough tasks along z", proc_z
+!               stop
+!       endif
 !
 !           
 !----------------------------------------------------------------
@@ -196,13 +203,13 @@
 ! Second receive data
         tag = 34
 !$acc host_data use_device(bufferZOUTP)
-        call mpi_irecv(bufferZOUTP(0,0,1), msgsizez, MYMPIREAL, down(2), tag, &
+        call mpi_irecv(bufferZOUTP(0,0,1), msgsizeZ, MYMPIREAL, down(2), tag, &
                           lbecomm, reqs_up(1), ierr)
 !$acc end host_data
 !
         tag = 32
 !$acc host_data use_device(bufferZOUTM)
-        call mpi_irecv(bufferZOUTM(0,0,1), msgsizez, MYMPIREAL, up(2), tag, &
+        call mpi_irecv(bufferZOUTM(0,0,1), msgsizeZ, MYMPIREAL, up(2), tag, &
                           lbecomm, reqs_down(1), ierr)
 !$acc end host_data
 !
@@ -220,13 +227,13 @@
 !
         tag = 23
 !$acc host_data use_device(bufferYOUTP)
-        call mpi_irecv(bufferYOUTP(0,0,1), msgsizey, MYMPIREAL,left(2), tag, &
+        call mpi_irecv(bufferYOUTP(0,0,1), msgsizeY, MYMPIREAL,left(2), tag, &
                           lbecomm, reqs_right(1), ierr)
 !$acc end host_data
 !                  
         tag = 21
 !$acc host_data use_device(bufferYOUTM)
-        call mpi_irecv(bufferYOUTM(0,0,1), msgsizey, MYMPIREAL,right(2), tag, &
+        call mpi_irecv(bufferYOUTM(0,0,1), msgsizeY, MYMPIREAL,right(2), tag, &
                           lbecomm, reqs_left(1), ierr)
 !$acc end host_data
 !
@@ -234,13 +241,13 @@
 ! Third send data.....                
         tag = 34
 !$acc host_data use_device(bufferZINP)
-        call mpi_isend(bufferZINP(0,0,1), msgsizez, MYMPIREAL, up(2), tag, &
+        call mpi_isend(bufferZINP(0,0,1), msgsizeZ, MYMPIREAL, up(2), tag, &
                           lbecomm, reqs_up(2), ierr)
 !$acc end host_data
 !
         tag = 32
 !$acc host_data use_device(bufferZINM)
-        call mpi_isend(bufferZINM(0,0,1), msgsizez, MYMPIREAL, down(2), tag, &
+        call mpi_isend(bufferZINM(0,0,1), msgsizeZ, MYMPIREAL, down(2), tag, &
                           lbecomm, reqs_down(2), ierr)
 !$acc end host_data
 !
@@ -252,7 +259,7 @@
 !
         tag = 10
 !$acc host_data use_device(bufferXINM)
-        call mpi_isend(bufferXINM(0,0,1),msgsizex,MYMPIREAL,rear(2),tag, &
+        call mpi_isend(bufferXINM(0,0,1),msgsizeX,MYMPIREAL,rear(2),tag, &
                           lbecomm, reqs_rear(2), ierr)
 !$acc end host_data
 !
@@ -264,7 +271,7 @@
 !
         tag = 21
 !$acc host_data use_device(bufferYINM)
-        call mpi_isend(bufferYINM(0,0,1), msgsizey, MYMPIREAL, left(2), tag, &
+        call mpi_isend(bufferYINM(0,0,1), msgsizeY, MYMPIREAL, left(2), tag, &
                           lbecomm, reqs_left(2), ierr)
 !$acc end host_data
 !
@@ -355,6 +362,31 @@
         timeY = timeY + (tcountY1 -tcountY0)
 !
         call mpi_barrier(lbecomm,ierr)
+!
+! edge fix
+! xy plane        
+        do k = 1,n
+           a01(0  ,m+1,k)=a01(l,1,k)
+           a03(0  ,  0,k)=a03(l,m,k)
+           a10(l+1,m+1,k)=a10(1,1,k)
+           a12(l+1,  0,k)=a12(1,m,k)
+        enddo
+!           
+! xz plane        
+        do j = 1,m
+           a02(  0,j,n+1)=a02(l,j,1)
+           a04(  0,j,  0)=a04(l,j,n)
+           a11(l+1,j,n+1)=a11(1,j,1)
+           a13(l+1,j,  0)=a13(1,j,n)
+        enddo
+!
+! xz plane        
+        do i = 1,l
+           a07(i,  0,  0)=a07(i,m,n)
+           a09(i,  0,n+1)=a09(i,m,1)
+           a16(i,m+1,n+1)=a16(i,1,1)
+           a18(i,m+1,  0)=a18(i,1,n)
+        enddo
 !
         call time(tcountA1)
         call SYSTEM_CLOCK(countA1, count_rate, count_max)
