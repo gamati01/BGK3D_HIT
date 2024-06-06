@@ -117,7 +117,7 @@
        loctot(1) = (rtot/float(l))/float(m)/float(n)
        loctot(2) = (xtot/float(l))/float(m)/float(n)
        loctot(3) = (ytot/float(l))/float(m)/float(n)
-       loctot(4) = (ytot/float(l))/float(m)/float(n)
+       loctot(4) = (ztot/float(l))/float(m)/float(n)
        loctot(5) = (stot/float(l))/float(m)/float(n)
 !
        call mpi_reduce(loctot,glotot,5,MYMPIREAL,mpi_sum,0,lbecomm,ierr)
