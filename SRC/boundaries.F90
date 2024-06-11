@@ -26,16 +26,9 @@
         use storage
 !
         implicit none
-        integer:: ierr, i
         integer:: itime
+        integer:: i, j, k, iunit
 !
-#ifdef DEBUG_2
-        if(myrank == 0) then
-           write(6,*) "DEBUG2: Entering in sub. boundaries"
-        endif
-#endif
-!
-
 #ifdef STEP10
 ! as STEP9 with "Overlap with mask (pointers) and async"
         call bcond_comm_step10
@@ -70,5 +63,45 @@
 ! default (naive)
         call bcond_comm_step0
 #endif
+!        
+! check
+#ifdef CORNER_CHECK
+        iunit=301+myrank
+        write(iunit,*) itime
+        do k = 1,n
+           write(iunit,*) a01(0  ,m+1,k)
+           write(iunit,*) a03(0  ,  0,k)
+           write(iunit,*) a10(l+1,m+1,k)
+           write(iunit,*) a12(l+1,  0,k)
+        enddo
+!
+        iunit=201+myrank
+        write(iunit,*) itime
+        do j = 1,m
+           write(iunit,*) a02(  0,j,n+1)
+           write(iunit,*) a04(  0,j,  0)
+           write(iunit,*) a11(l+1,j,n+1)
+           write(iunit,*) a13(l+1,j,  0)
+        enddo
+        write(iunit,*) " "
+!
+        iunit=101+myrank
+        write(iunit,*) itime
+        do i=1,l
+           write(iunit,*) a07(i,  0,  0)
+           write(iunit,*) a09(i,  0,n+1)
+           write(iunit,*) a16(i,m+1,n+1)
+           write(iunit,*) a18(i,m+1,  0)
+        enddo
+        write(iunit,*) " "
+#endif
+
+#ifdef DEBUG_2
+        if(myrank == 0) then
+           write(6,*) "DEBUG2: exiting from sub. boundaries"
+        endif
+#endif
+!
+
 
       end subroutine boundaries

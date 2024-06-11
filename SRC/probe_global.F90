@@ -85,11 +85,20 @@
                yj = (x03+x07+x08+x09+x12-x01-x10-x16-x17-x18)
                zj = (x04+x06+x07+x13+x18-x02-x09-x11-x15-x16)
 !$acc end kernels
-               write(unit,1002) itime, xj/rho, yj/rho, zj/rho, rho
+!               write(unit,1002) itime, xj/rho, yj/rho, zj/rho, rho
+               write(unit,*) itime
+               write(unit,*) x01,x02,x03,x04
+               write(unit,*) x05,x06,x07,x08
+               write(unit,*) x09,x10,x11,x12
+               write(unit,*) x13,x14,x15,x16
+               write(unit,*) x17,x18,x19
+               write(unit,*) " "
            endif
          endif
        endif
 !
+!       write(6,*) "I'm task", myrank, i0-offsetX,j0-offsetY,k0-offsetZ
+!       
        flush(unit)       
 !
 #ifdef DEBUG_2

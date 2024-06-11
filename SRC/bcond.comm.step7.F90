@@ -56,6 +56,36 @@
         real(mystor), dimension(:,:,:), allocatable, save :: bufferZOUTP
         real(mystor), dimension(:,:,:), allocatable, save :: bufferZOUTM
 !
+        real(mystor), dimension(:), allocatable, save :: buffer01in
+        real(mystor), dimension(:), allocatable, save :: buffer03in
+        real(mystor), dimension(:), allocatable, save :: buffer10in
+        real(mystor), dimension(:), allocatable, save :: buffer12in
+!
+        real(mystor), dimension(:), allocatable, save :: buffer01out
+        real(mystor), dimension(:), allocatable, save :: buffer03out
+        real(mystor), dimension(:), allocatable, save :: buffer10out
+        real(mystor), dimension(:), allocatable, save :: buffer12out
+!
+        real(mystor), dimension(:), allocatable, save :: buffer02in
+        real(mystor), dimension(:), allocatable, save :: buffer04in
+        real(mystor), dimension(:), allocatable, save :: buffer11in
+        real(mystor), dimension(:), allocatable, save :: buffer13in
+!
+        real(mystor), dimension(:), allocatable, save :: buffer02out
+        real(mystor), dimension(:), allocatable, save :: buffer04out
+        real(mystor), dimension(:), allocatable, save :: buffer11out
+        real(mystor), dimension(:), allocatable, save :: buffer13out
+!
+        real(mystor), dimension(:), allocatable, save :: buffer07in
+        real(mystor), dimension(:), allocatable, save :: buffer09in
+        real(mystor), dimension(:), allocatable, save :: buffer16in
+        real(mystor), dimension(:), allocatable, save :: buffer18in
+!
+        real(mystor), dimension(:), allocatable, save :: buffer07out
+        real(mystor), dimension(:), allocatable, save :: buffer09out
+        real(mystor), dimension(:), allocatable, save :: buffer16out
+        real(mystor), dimension(:), allocatable, save :: buffer18out
+!           
         integer      :: status_front(MPI_STATUS_SIZE)
         integer      :: status_rear(MPI_STATUS_SIZE)
         integer      :: reqs_front(2)
@@ -90,6 +120,37 @@
            allocate(bufferZINM (0:l+1,0:m+1,1:5))
            allocate(bufferZOUTP(0:l+1,0:m+1,1:5))
            allocate(bufferZOUTM(0:l+1,0:m+1,1:5))
+!           
+           allocate(buffer01in(1:n))
+           allocate(buffer03in(1:n))
+           allocate(buffer10in(1:n))
+           allocate(buffer12in(1:n))
+!
+           allocate(buffer01out(1:n))
+           allocate(buffer03out(1:n))
+           allocate(buffer10out(1:n))
+           allocate(buffer12out(1:n))
+!
+           allocate(buffer02in(1:m))
+           allocate(buffer04in(1:m))
+           allocate(buffer11in(1:m))
+           allocate(buffer13in(1:m))
+!
+           allocate(buffer02out(1:m))
+           allocate(buffer04out(1:m))
+           allocate(buffer11out(1:m))
+           allocate(buffer13out(1:m))
+!
+           allocate(buffer07in(1:l))
+           allocate(buffer09in(1:l))
+           allocate(buffer16in(1:l))
+           allocate(buffer18in(1:l))
+!
+           allocate(buffer07out(1:l))
+           allocate(buffer09out(1:l))
+           allocate(buffer16out(1:l))
+           allocate(buffer18out(1:l))
+!           
         endif
 !        
         msgsizeX = (m+2)*(n+2)*5
@@ -366,26 +427,107 @@
 ! edge fix
 ! xy plane        
         do k = 1,n
-           a01(0  ,m+1,k)=a01(l,1,k)
-           a03(0  ,  0,k)=a03(l,m,k)
-           a10(l+1,m+1,k)=a10(1,1,k)
-           a12(l+1,  0,k)=a12(1,m,k)
+           buffer01in(k)=a01(l,1,k)
+           buffer03in(k)=a03(l,m,k)
+           buffer10in(k)=a10(1,1,k)
+           buffer12in(k)=a12(1,m,k)
         enddo
 !           
+        tag=1001
+        call mpi_send(buffer01in(1),n,MYMPIREAL,frontleft,tag,lbecomm,ierr)
+        call mpi_recv(buffer01out(1),n,MYMPIREAL,rearright,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        tag=1003
+        call mpi_send(buffer03in(1),n,MYMPIREAL,frontright,tag,   lbecomm,ierr)
+        call mpi_recv(buffer03out(1),n,MYMPIREAL,rearleft,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        tag=1010
+        call mpi_send(buffer10in(1),n,MYMPIREAL,rearleft,tag, lbecomm,ierr)
+        call mpi_recv(buffer10out(1),n,MYMPIREAL,frontright,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!        
+        tag=1012
+        call mpi_send(buffer12in(1),n,MYMPIREAL,rearright,tag,  lbecomm,ierr)
+        call mpi_recv(buffer12out(1),n,MYMPIREAL,frontleft,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!        
+        do k = 1,n
+           a01(0  ,m+1,k)=buffer01out(k)
+           a03(0  ,  0,k)=buffer03out(k)
+           a10(l+1,m+1,k)=buffer10out(k)
+           a12(l+1,  0,k)=buffer12out(k)
+        enddo
+!        
 ! xz plane        
         do j = 1,m
-           a02(  0,j,n+1)=a02(l,j,1)
-           a04(  0,j,  0)=a04(l,j,n)
-           a11(l+1,j,n+1)=a11(1,j,1)
-           a13(l+1,j,  0)=a13(1,j,n)
+           buffer02in(j)=a02(l,j,1)
+           buffer04in(j)=a04(l,j,n)
+           buffer11in(j)=a11(1,j,1)
+           buffer13in(j)=a13(1,j,n)
         enddo
 !
-! xz plane        
+      tag=1002
+      call mpi_send(buffer02in(1),m,MYMPIREAL,frontdown,tag, lbecomm,ierr)
+      call mpi_recv(buffer02out(1),m,MYMPIREAL,rearup, tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
+!
+      tag=1004
+      call mpi_send(buffer04in(1),m,MYMPIREAL,frontup,tag, lbecomm,ierr)
+      call mpi_recv(buffer04out(1),m,MYMPIREAL,reardown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
+!
+      tag=1011
+      call mpi_send(buffer11in(1),m,MYMPIREAL,reardown,tag, lbecomm,ierr)
+      call mpi_recv(buffer11out(1),m,MYMPIREAL,frontup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
+!
+      tag=1013
+      call mpi_send(buffer13in(1),m,MYMPIREAL,rearup,tag, lbecomm,ierr)
+      call mpi_recv(buffer13out(1),m,MYMPIREAL,frontdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
+!
+        do j = 1,m
+           a02(  0,j,n+1)=buffer02out(j)
+           a04(  0,j,  0)=buffer04out(j)
+           a11(l+1,j,n+1)=buffer11out(j)
+           a13(l+1,j,  0)=buffer13out(j)
+        enddo
+!
+! yz plane        
         do i = 1,l
-           a07(i,  0,  0)=a07(i,m,n)
-           a09(i,  0,n+1)=a09(i,m,1)
-           a16(i,m+1,n+1)=a16(i,1,1)
-           a18(i,m+1,  0)=a18(i,1,n)
+           buffer07in(i)=a07(i,m,n)
+           buffer09in(i)=a09(i,m,1)
+           buffer16in(i)=a16(i,1,1)
+           buffer18in(i)=a18(i,1,n)
+        enddo
+!
+        tag=1007
+        call mpi_send(buffer07in(1),l,MYMPIREAL,rightup,tag, lbecomm,ierr)
+        call mpi_recv(buffer07out(1),l,MYMPIREAL,leftdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        tag=1009
+        call mpi_send(buffer09in(1),l,MYMPIREAL,rightdown,tag, lbecomm,ierr)
+        call mpi_recv(buffer09out(1),l,MYMPIREAL,leftup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        tag=1016
+        call mpi_send(buffer16in(1),l,MYMPIREAL,leftdown,tag, lbecomm,ierr)
+        call mpi_recv(buffer16out(1),l,MYMPIREAL,rightup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        tag=1018
+        call mpi_send(buffer18in(1),l,MYMPIREAL,leftup,tag, lbecomm,ierr)
+        call mpi_recv(buffer18out(1),l,MYMPIREAL,rightdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+        call mpi_barrier(lbecomm,ierr)
+!
+        do i = 1,l
+           a07(i,  0,  0)=buffer07out(i)
+           a09(i,  0,n+1)=buffer09out(i)
+           a16(i,m+1,n+1)=buffer16out(i)
+           a18(i,m+1,  0)=buffer18out(i)
         enddo
 !
         call time(tcountA1)

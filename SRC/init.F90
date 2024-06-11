@@ -141,8 +141,9 @@
         end do
 !        
 ! check        
-!        if(myrank==0) then
+!        if(myrank==1) then
 !           do i = 0, l+1
+!              write(66,*) i0,j0,k0
 !              write(66,*) i, a01(i,m/2,n/2)
 !           end do
 !        endif

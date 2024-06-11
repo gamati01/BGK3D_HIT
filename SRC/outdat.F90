@@ -27,8 +27,10 @@
 !
       integer:: itfin,ivtim,isignal,itsave,icheck
       integer:: irestart,itstart
-
       character*35 :: comms
+      real(mykind):: Re, dx, pi
+!
+      parameter(pi=3.141592653589793238462643383279)
 !
       if(myrank==0) then 
 !
@@ -58,6 +60,9 @@
 !
          call git_info
 !         
+         dx = 2.0*pi/real(l,mykind)
+         Re = u0/(dx*svisc)+u00/(dx*svisc)
+!
          write(6,*) ' '
          write(6,*) '*********** size of the lattice **************'
          write(6,*) 'lx (width x) =',lx
@@ -77,7 +82,7 @@
          write(6,*) 'u00          =',u00
          write(6,*) 'omega        =',omega
          write(6,*) 'tau          =',1.0/omega
-         write(6,*) 'Reynolds     =',0.5*u0*l/svisc+0.5*u00*l/svisc
+         write(6,*) 'Reynolds     =',Re
          write(6,*) 'forcing1     =',fgrad
          write(6,*) 'forcing2     =',u00/(6.0)
          write(6,*) 'u_inflow     =',u_inflow

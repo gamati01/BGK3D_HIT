@@ -121,7 +121,7 @@
       offset(2) = mpicoords(2)*m
       offset(3) = mpicoords(3)*n
 !
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 ! x dir
       call MPI_cart_shift(lbecomm, 0, 1, rear(2), front(2), ierr)
@@ -130,85 +130,85 @@
 ! z dir
       call MPI_cart_shift(lbecomm, 2, 1, down(2), up(2), ierr)
 !
-! edges
+! compute "diagonal" task
 ! xy plane
 !
 !    a01 --> front-left
       tag=1001
-      call mpi_send(left(2),1,MPI_INT,rear(2),tag,   MPI_COMM_WORLD,ierr)
-      call mpi_recv(frontleft,1,MPI_INT,front(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(left(2),1,MPI_INT,rear(2),tag,   lbecomm,ierr)
+      call mpi_recv(frontleft,1,MPI_INT,front(2),tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !      
 !    a03 --> front-right
       tag=1003
-      call mpi_send(right(2),1,MPI_INT,rear(2),tag,   MPI_COMM_WORLD,ierr)
-      call mpi_recv(frontright,1,MPI_INT,front(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(right(2),1,MPI_INT,rear(2),tag,   lbecomm,ierr)
+      call mpi_recv(frontright,1,MPI_INT,front(2),tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !          
 !    a10 --> rear-left
       tag=1010
-      call mpi_send(left(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(rearleft,1,MPI_INT,rear(2),tag,MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(left(2),1,MPI_INT,front(2),tag, lbecomm,ierr)
+      call mpi_recv(rearleft,1,MPI_INT,rear(2),tag,lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 !    a12 --> rear-right
       tag=1012
-      call mpi_send(right(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(rearright,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(right(2),1,MPI_INT,front(2),tag, lbecomm,ierr)
+      call mpi_recv(rearright,1,MPI_INT,rear(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 ! xz plane
 ! 
 !    a02 --> front-down
       tag=1002
-      call mpi_send(down(2),1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(frontdown,1,MPI_INT,front(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(down(2),1,MPI_INT,rear(2),tag, lbecomm,ierr)
+      call mpi_recv(frontdown,1,MPI_INT,front(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !      
 !    a04 --> front-up
       tag=1004
-      call mpi_send(up(2),1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(frontup  ,1,MPI_INT,front(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(up(2),1,MPI_INT,rear(2),tag, lbecomm,ierr)
+      call mpi_recv(frontup  ,1,MPI_INT,front(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !      
 !    a11 --> rear-down
       tag=1011
-      call mpi_send(down(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv( reardown,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(down(2),1,MPI_INT,front(2),tag, lbecomm,ierr)
+      call mpi_recv( reardown,1,MPI_INT,rear(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !      
 !    a13 --> rear-up
       tag=1013
-      call mpi_send(  up(2),1,MPI_INT,front(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(   rearup,1,MPI_INT,rear(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(  up(2),1,MPI_INT,front(2),tag, lbecomm,ierr)
+      call mpi_recv(   rearup,1,MPI_INT,rear(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !      
 !
 ! yz plane
 !      
 !    a07 --> right-up
       tag=1007
-      call mpi_send(   up(2),1,MPI_INT,left(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv( rightup,1,MPI_INT,right(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(   up(2),1,MPI_INT,left(2),tag, lbecomm,ierr)
+      call mpi_recv( rightup,1,MPI_INT,right(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 !    a09 --> right-down
       tag=1009
-      call mpi_send( down(2),1,MPI_INT,left(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv( rightdown,1,MPI_INT,right(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send( down(2),1,MPI_INT,left(2),tag, lbecomm,ierr)
+      call mpi_recv( rightdown,1,MPI_INT,right(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 !    a16 --> left-down
       tag=1016
-      call mpi_send( down(2),1,MPI_INT,right(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv( leftdown,1,MPI_INT,left(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send( down(2),1,MPI_INT,right(2),tag, lbecomm,ierr)
+      call mpi_recv( leftdown,1,MPI_INT,left(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 !    a18 --> left-up
       tag=1018
-      call mpi_send(  up(2),1,MPI_INT,right(2),tag, MPI_COMM_WORLD,ierr)
-      call mpi_recv(   leftup,1,MPI_INT,left(2),tag, MPI_COMM_WORLD,MPI_STATUS_IGNORE,ierr)
-      call mpi_barrier(MPI_COMM_WORLD,ierr)
+      call mpi_send(  up(2),1,MPI_INT,right(2),tag, lbecomm,ierr)
+      call mpi_recv(   leftup,1,MPI_INT,left(2),tag, lbecomm,MPI_STATUS_IGNORE,ierr)
+      call mpi_barrier(lbecomm,ierr)
 !
 ! yz plane is composed by single point (stride.ne.1)
       call MPI_type_vector((n+2)*(m+2), 1, l+2, MYMPIREAL, yzplane, ierr)

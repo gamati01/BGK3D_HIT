@@ -63,13 +63,10 @@
                                float(n+2)*float(m+2)*float(itfin)*knorm/timeX
 !      write(38,*) "#", myrank, ":Memory (stop) --->", mem_stop
 !
-      if(myrank==0) then
-      endif
-!      
 ! free derived datatype
-      call MPI_type_free(xyplane,ierr)
-      call MPI_type_free(yzplane,ierr)
-      call MPI_type_free(xzplane,ierr)
+!GA      call MPI_type_free(xyplane,ierr)
+!GA      call MPI_type_free(yzplane,ierr)
+!GA      call MPI_type_free(xzplane,ierr)
 !
       call mpi_barrier(lbecomm,ierr)
 !
@@ -102,6 +99,7 @@
          write(6,9999)
       endif      
 !      
+      call mpi_barrier(lbecomm,ierr)
       call MPI_finalize(ierr)
 !
 ! formats

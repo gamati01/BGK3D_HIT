@@ -140,6 +140,7 @@
 !
 ! 2.3) diagnostic         
          call diagnostic(itime,icheck,ivtim,itsave,isignal,itfin)
+!         call probe_global(itime,10,10,10,88)
       enddo
 !$acc end data
 !

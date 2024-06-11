@@ -47,8 +47,8 @@
             call diagno(itime)
 !
             call dissipation(itime)
-!            call probe_global(itime,lz/2,ly/2,lz/2,88) 
-            call mpi_barrier(MPI_COMM_WORLD,ierr)
+            call probe_global(itime,lz/2,ly/2,lz/2,88) 
+            call mpi_barrier(lbecomm,ierr)
 ! 
          if(mod(itime,ivtim)==0) then
             call vtk_xy_bin(itime,n/2)
