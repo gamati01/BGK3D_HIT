@@ -60,7 +60,7 @@
 !
          call git_info
 !         
-         dx = 2.0*pi/real(l,mykind)
+         dx = 2.0*pi/real(lx,mykind)
          Re = u0/(dx*svisc)+u00/(dx*svisc)
 !
          write(6,*) ' '

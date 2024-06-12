@@ -51,7 +51,7 @@
            end do
         end do
 !        
-! second set the bulk
+! second set the bulk for the inner part....
         do k = 1+border, n-border
            do j = 1+border, m-border
               do i = 1+border, l-border

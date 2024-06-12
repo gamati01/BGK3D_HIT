@@ -67,6 +67,8 @@
         msgsizeY = (l+2)*(n+2)*5
         msgsizeZ = (l+2)*(m+2)*5
 !
+!$acc enter data create(bufferXIN,bufferXOUT,bufferYIN,bufferYOUT,bufferZIN,bufferZOUT)
+!
 !------------------------------------------------------------------------
 ! comms along z + 
 !
@@ -86,9 +88,11 @@
         enddo
 !$acc end kernels
 !
+!$acc host_data use_device(bufferZIN,bufferZOUT)
         call mpi_sendrecv(bufferZIN(0,0,1),msgsizeZ,MYMPIREAL,up(2),tag,&
                           bufferZOUT(0,0,1),msgsizeZ,MYMPIREAL,down(2),tag,&
                           lbecomm,status,ierr)
+!$acc end host_data
 !
 !$acc kernels
         do j = 0,m+1
@@ -120,9 +124,11 @@
         enddo
 !$acc end kernels
 !        
+!$acc host_data use_device(bufferZIN,bufferZOUT)
         call mpi_sendrecv(bufferZIN(0,0,1),msgsizeZ,MYMPIREAL,down(2),tag,&
                           bufferZOUT(0,0,1),msgsizeZ,MYMPIREAL,up(2),tag,&
                           lbecomm,status,ierr)
+!$acc end host_data
 !
 !$acc kernels
         do j = 0,m+1
@@ -159,10 +165,11 @@
         enddo
 !$acc end kernels
 !
+!$acc host_data use_device(bufferXIN,bufferXOUT)
         call mpi_sendrecv(bufferXIN(0,0,1),msgsizeX,MYMPIREAL,front(2),tag,&
                           bufferXOUT(0,0,1),msgsizeX,MYMPIREAL,rear(2),tag,&
                           lbecomm,status,ierr)
-
+!$acc end host_data
 !
 !$acc kernels
         do k = 0,n+1
@@ -194,9 +201,11 @@
         enddo
 !$acc end kernels
 !
+!$acc host_data use_device(bufferXIN,bufferXOUT)
         call mpi_sendrecv(bufferXIN(0,0,1),msgsizeX,MYMPIREAL,rear(2),tag,&
                           bufferXOUT(0,0,1),msgsizeX,MYMPIREAL,front(2),tag,&
                           lbecomm,status,ierr)
+!$acc end host_data
 !
         call time(tcountX1)
         timeX = timeX + (tcountX1 -tcountX0)
@@ -233,9 +242,11 @@
         enddo
 !$acc end kernels
 !
+!$acc host_data use_device(bufferYIN,bufferYOUT)
         call mpi_sendrecv(bufferYIN(0,0,1),msgsizeY,MYMPIREAL,right(2),tag,&
                           bufferYOUT(0,0,1),msgsizeY,MYMPIREAL,left(2),tag,&
                           lbecomm,status,ierr)
+!$acc end host_data
 !
 !$acc kernels
         do k = 0,n+1
@@ -267,9 +278,11 @@
         enddo
 !$acc end kernels
 !
+!$acc host_data use_device(bufferYIN,bufferYOUT)
         call mpi_sendrecv(bufferYIN(0,0,1),msgsizeY,MYMPIREAL,left(2),tag,&
                           bufferYOUT(0,0,1),msgsizeY,MYMPIREAL,right(2),tag,&
                           lbecomm,status,ierr)
+!$acc end host_data
 !
 !$acc kernels
         do k = 0,n+1
