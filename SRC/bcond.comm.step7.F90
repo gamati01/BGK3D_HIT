@@ -449,21 +449,21 @@
 !$acc end host_data
 !
         tag=1003
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer03in,buffer03out)
         call mpi_send(buffer03in(1),n,MYMPIREAL,frontright,tag,   lbecomm,ierr)
         call mpi_recv(buffer03out(1),n,MYMPIREAL,rearleft,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
         tag=1010
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer10in,buffer10out)
         call mpi_send(buffer10in(1),n,MYMPIREAL,rearleft,tag, lbecomm,ierr)
         call mpi_recv(buffer10out(1),n,MYMPIREAL,frontright,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !        
         tag=1012
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer12in,buffer12out)
         call mpi_send(buffer12in(1),n,MYMPIREAL,rearright,tag,  lbecomm,ierr)
         call mpi_recv(buffer12out(1),n,MYMPIREAL,frontleft,tag,lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
@@ -489,28 +489,28 @@
 !$acc end kernels
 !
       tag=1002
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer02in,buffer02out)
       call mpi_send(buffer02in(1),m,MYMPIREAL,frontdown,tag, lbecomm,ierr)
       call mpi_recv(buffer02out(1),m,MYMPIREAL,rearup, tag, lbecomm,MPI_STATUS_IGNORE,ierr)
       call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
       tag=1004
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer04in,buffer04out)
       call mpi_send(buffer04in(1),m,MYMPIREAL,frontup,tag, lbecomm,ierr)
       call mpi_recv(buffer04out(1),m,MYMPIREAL,reardown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
       call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
       tag=1011
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer11in,buffer11out)
       call mpi_send(buffer11in(1),m,MYMPIREAL,reardown,tag, lbecomm,ierr)
       call mpi_recv(buffer11out(1),m,MYMPIREAL,frontup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
       call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
       tag=1013
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer13in,buffer13out)
       call mpi_send(buffer13in(1),m,MYMPIREAL,rearup,tag, lbecomm,ierr)
       call mpi_recv(buffer13out(1),m,MYMPIREAL,frontdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
       call mpi_barrier(lbecomm,ierr)
@@ -536,28 +536,28 @@
 !$acc end kernels
 !
         tag=1007
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer07in,buffer07out)
         call mpi_send(buffer07in(1),l,MYMPIREAL,rightup,tag, lbecomm,ierr)
         call mpi_recv(buffer07out(1),l,MYMPIREAL,leftdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
         tag=1009
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer09in,buffer09out)
         call mpi_send(buffer09in(1),l,MYMPIREAL,rightdown,tag, lbecomm,ierr)
         call mpi_recv(buffer09out(1),l,MYMPIREAL,leftup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
         tag=1016
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer16in,buffer16out)
         call mpi_send(buffer16in(1),l,MYMPIREAL,leftdown,tag, lbecomm,ierr)
         call mpi_recv(buffer16out(1),l,MYMPIREAL,rightup,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)
 !$acc end host_data
 !
         tag=1018
-!$acc host_data use_device(buffer01in,buffer01out)
+!$acc host_data use_device(buffer18in,buffer18out)
         call mpi_send(buffer18in(1),l,MYMPIREAL,leftup,tag, lbecomm,ierr)
         call mpi_recv(buffer18out(1),l,MYMPIREAL,rightdown,tag, lbecomm,MPI_STATUS_IGNORE,ierr)
         call mpi_barrier(lbecomm,ierr)

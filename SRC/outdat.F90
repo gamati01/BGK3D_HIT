@@ -141,7 +141,7 @@
          write(16,*) 'u00          =',u00
          write(16,*) 'omega        =',omega
          write(16,*) 'tau          =',1.0/omega
-         write(16,*) 'Reynolds     =',0.5*u0*l/svisc+0.5*u00*l/svisc
+         write(16,*) 'Reynolds     =',Re
          write(16,*) 'forcing1     =',fgrad
          write(16,*) 'forcing2     =',u00/(6.0)
          write(16,*) 'u_inflow     =',u_inflow
