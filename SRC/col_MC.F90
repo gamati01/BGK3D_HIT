@@ -432,7 +432,7 @@
 ! stop timing (for collision)
       call SYSTEM_CLOCK(countC1, count_rate, count_max)
       call time(tcountC1)
-      time_coll = time_coll + real(countC1-countC0)/(count_rate)
+      time_coll  = time_coll + real(countC1-countC0)/(count_rate)
       time_coll1 = time_coll1 + tcountC1-tcountC0
 !
 #ifdef DEBUG_2

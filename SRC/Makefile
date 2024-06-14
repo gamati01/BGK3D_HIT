@@ -136,17 +136,21 @@ OBJ  = storage.o \
        prof_k.o \
        profile.o \
        git_info.o \
+       make_info.o \
        outdat.o \
        vtk_xy.binary.o \
        vtk_xz.binary.o \
        vtk_yz.binary.o \
        vtk_3d.binary.o \
-
+#
 #----------------------------------------------
 #
 all: $(MOD) $(OBJ) $(OBJ1)
 	$(FC) $(FOPT) $(OBJ) $(OBJ1) $(FIX) $(TRY) $(LIB) -o ../RUN/bgk3d_HIT.$(VER).x 
+	rm make_info.F90
+	rm git_info.F90
 	@echo $(FINE)
+
 
 #----------------------------------------------
 
@@ -165,13 +169,23 @@ all: $(MOD) $(OBJ) $(OBJ1)
 %.p: %.f90
 	$(FC) $(FOPT) $(DBL) $(PREPROC) $(FIX) $(TRY) $<
 
+#----------------------------------------------
+make_info.F90:
+	echo "    subroutine make_info"                      >  make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(FIX)    ` \"  >> make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(FC)     ` \"  >> make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(FOPT)   ` \"  >> make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(PREPROC)` \"  >> make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(GPU)    ` \"  >> make_info.F90
+	echo "    write( 6,*) \""INFO: `echo $(TRY)    ` \"  >> make_info.F90
+	echo "    end subroutine make_info"                  >> make_info.F90
+
 git_info.F90:
 	echo "    subroutine git_info"                              >> git_info.F90
 	echo "    write( 6,*) \""INFO: `git log  | head  -n 1` \"   >> git_info.F90
 	echo "    write(16,*) \""INFO: `git log  | head  -n 1` \"   >> git_info.F90
 	echo "    end subroutine git_info"                          >> git_info.F90
 #
-
 #----------------------------------------------
 clean:
 	rm -f *.o;

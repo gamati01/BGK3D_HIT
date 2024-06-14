@@ -58,6 +58,7 @@
          comms="STEP0"
 #endif
 !
+         call make_info
          call git_info
 !         
          dx = 2.0*pi/real(lx,mykind)
